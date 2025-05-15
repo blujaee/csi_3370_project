@@ -2,37 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<style>
-		body {
-			background-image: url('https://pbs.twimg.com/media/GPrjOMEb0AAUNxj?format=jpg&name=4096x4096');
-			border-color: green;
-		}
-
-		input[type="text"] {
-			width: 100px;
-			height: 30px;
-			border-radius: 5px;
-			background-color: lightblue;
-			margin-left: 2px;
-			position: relative;
-		}
-
-		label {
-			position: relative;
-			width: 300px;
-			margin: 20px;
-			padding: 5px;
-			font-family: AR CENA;
-			font-size: 20px;
-		}
-	</style>
+	<!-- Bootstrap stylesheet for making the site look nicer (optional) -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 </head>
 
 <body>
-	<div class="login">
-		<label>Email: </label><input type="text" name="myInput" placeholder="your@email.com" size="30" required>
-		<label>Password: </label><input type="text" name="myInput" size="20" required>
-		<input type="submit" name="myInput" value="Submit">
+	<nav class="navbar navbar-expand-sm navbar-light bg-light p-2">
+		<a class="navbar-brand text-primary" href="">Co-op Health</a>
+
+		<div class="navbar-nav">
+			<a class="nav-item nav-link" th:href="@{/home}">Home</a>
+			<a class="nav-item nav-link active" th:href="@{/login}">Login</a>
+			<a class="nav-item nav-link" th:href="@{/search}">Search Database</a>
+			<a class="nav-item nav-link" href="/">Add New Patient</a>
+			<a class="nav-item nav-link" href="/">Help</a>
+		</div>
+	</nav>
+
+	<div class="d-flex justify-content-center align-items-center vh-100">
+		<div class="card p-4">
+			<h3 class="text-center mb-4">Login</h3>
+			<form>
+				<div class="mb-3">
+					<label for="email" class="form-label">Email address</label>
+					<input type="email" class="form-control" id="email" placeholder="Email">
+				</div>
+				<div class="mb-3">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" class="form-control" id="password" placeholder="Password">
+				</div>
+				<button type="submit" class="btn btn-primary w-100">Login</button>
+			</form>
+		</div>
 	</div>
 </body>
 

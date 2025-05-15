@@ -19,7 +19,7 @@ public class GetController {
             new Person("Larry", 23, "larry123@gmail.com")
         ));
 
-        return "example";
+        return "home";
     }
 
     @GetMapping("/home")
@@ -30,5 +30,10 @@ public class GetController {
     @GetMapping("/login")
     public String login(Model model) {
         return "login";
+    }
+
+    @GetMapping("/search")
+    public String search() {
+        return "search";
     }
 }
