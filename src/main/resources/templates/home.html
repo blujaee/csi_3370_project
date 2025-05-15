@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <style>
+        .topnav {
+            background-color: #00FFFF
+        }
+
+        .topnav a {
+            color: #333
+        }
+    </style>
+
+    <head>
+
+    <body>
+        <div class="topnav">
+            <a class="active" href="#home">Home</a>
+            <a href="#news">Search Database</a>
+            <a href="#contact">Add New Patient</a>
+            <a href="#about">Help</a>
+        </div>
+
+        <div th:text="${name}"></div>
+
+        <input type="search" name="myInput" placeholder="Search For a Patient..." size="30" required>
+    </body>
+
+</html>
