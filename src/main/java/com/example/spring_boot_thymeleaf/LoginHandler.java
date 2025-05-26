@@ -1,32 +1,28 @@
 package com.example.spring_boot_thymeleaf;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.*;
 
 public class LoginHandler {
-    private static final Map<String, String> usersDB = new HashMap<>();
+    public static boolean registerUser(String email, String password) {
+        try {
+            Class.forName("org.postgresql.Driver"); // Load PostgreSQL JDBC driver
+            try (Connection conn = DriverManager.getConnection(System.getProperty("JDBC_DATABASE_URL"), System.getProperty("JDBC_DATABASE_USER"), System.getProperty("JDBC_DATABASE_PASSWORD"))) {
+                String query = "INSERT INTO users (email, password) VALUES (?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(query)) {
+                    ps.setString(1, email);
+                    ps.setString(2, password);
 
-    static {
-        // Sample user database
-        usersDB.put("admin@example.com", "admin123");
-        usersDB.put("doctor@clinic.com", "docpass");
-        usersDB.put("user@example.com", "userpass");
-    }
-
-    /**
-     * This method checks login credentials and returns an error code.
-     * @param email User's email.
-     * @param password User's password.
-     * @return Error code: 0 (Success), 1 (Invalid email), 2 (Incorrect password).
-     */
-    // TODO: Hash user password and compare that against database hash (NOT plaintext)
-    public static int loginUser(String email, String password) {
-        if (!usersDB.containsKey(email)) {
-            return 1; // Invalid email
-        } else if (!usersDB.get(email).equals(password)) {
-            return 2; // Incorrect password
-        } else {
-            return 0; // Login successful
+                    int affectedRows = ps.executeUpdate();
+                    return affectedRows > 0; // Registration successful if rows were inserted
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            System.out.println("PostgreSQL JDBC Driver not found.");
+            e.printStackTrace();
+            return false;
+        } catch (SQLException ex) {
+            System.out.println("Database error: " + ex.getMessage());
+            return false;
         }
     }
 }
