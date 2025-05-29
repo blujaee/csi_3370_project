@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ################################################################################
-FROM maven:3.8.8-jdk-17-slim AS deps
+FROM eclipse-temurin:17-jdk-jammy as deps
 WORKDIR /build
 COPY mvnw .mvn/ pom.xml ./
 RUN chmod +x mvnw \
