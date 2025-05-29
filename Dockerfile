@@ -43,15 +43,14 @@ RUN adduser \
     appuser
 
 USER appuser
-WORKDIR /app    # ← set your working dir
+WORKDIR /app
 
-COPY --from=extract /build/target/extracted/dependencies/      ./dependencies/
+COPY --from=extract /build/target/extracted/dependencies/   ./dependencies/
 COPY --from=extract /build/target/extracted/spring-boot-loader/ ./spring-boot-loader/
 COPY --from=extract /build/target/extracted/snapshot-dependencies/ ./snapshot-dependencies/
-COPY --from=extract /build/target/extracted/application/       ./application/
-
-# i hope this works or else
+COPY --from=extract /build/target/extracted/application/    ./application/
 COPY --chown=appuser:appuser .env ./
 
 EXPOSE 8080
-ENTRYPOINT ["java","org.springframework.boot.loader.launch.JarLauncher"]
+
+ENTRYPOINT ["java","-cp","spring-boot-loader:dependencies/*:snapshot-dependencies/*:application/*","org.springframework.boot.loader.JarLauncher"]
