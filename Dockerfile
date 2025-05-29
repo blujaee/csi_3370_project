@@ -32,7 +32,6 @@ RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/e
 
 FROM eclipse-temurin:17-jre-jammy AS final
 
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
 ARG UID=10001
 RUN adduser \
     --disabled-password \
@@ -42,13 +41,17 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
-USER appuser
 
-COPY --from=extract build/target/extracted/dependencies/ ./
-COPY --from=extract build/target/extracted/spring-boot-loader/ ./
-COPY --from=extract build/target/extracted/snapshot-dependencies/ ./
-COPY --from=extract build/target/extracted/application/ ./
+USER appuser
+WORKDIR /app    # ← set your working dir
+
+COPY --from=extract /build/target/extracted/dependencies/      ./dependencies/
+COPY --from=extract /build/target/extracted/spring-boot-loader/ ./spring-boot-loader/
+COPY --from=extract /build/target/extracted/snapshot-dependencies/ ./snapshot-dependencies/
+COPY --from=extract /build/target/extracted/application/       ./application/
+
+# i hope this works or else
+COPY --chown=appuser:appuser .env ./
 
 EXPOSE 8080
-
-ENTRYPOINT [ "java", "org.springframework.boot.loader.launch.JarLauncher" ]
+ENTRYPOINT ["java","org.springframework.boot.loader.launch.JarLauncher"]
