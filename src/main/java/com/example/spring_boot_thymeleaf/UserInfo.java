@@ -33,6 +33,8 @@ public class UserInfo {
     @Column(name = "date_joined")
     private String date_joined;
 
+    private String passwordHash;
+
     public UserInfo() {}
 
     public String getId() {
@@ -106,4 +108,13 @@ public class UserInfo {
     public void setDateJoined(String date_joined) {
         this.date_joined = date_joined;
     }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
 }

@@ -35,11 +35,6 @@ public class SpringBootThymeleafApplication {
         return "home";
     }
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        return "login";
-    }
-
     @GetMapping("/search")
     public String search(Model model) {
         return "search";
