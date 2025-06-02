@@ -39,27 +39,25 @@ public class LoginHandler {
             throws ClassNotFoundException, SQLException
     {
         Class.forName("org.postgresql.Driver");
+        String sql = 
+            "SELECT 1 " +
+            "FROM users " +
+            "WHERE email = ? " +
+            "  AND password = crypt(?, password)";
 
-        String storedHash;
         try (Connection conn = DriverManager.getConnection(
-                 System.getProperty("JDBC_DATABASE_URL"),
-                 System.getProperty("JDBC_DATABASE_USER"),
-                 System.getProperty("JDBC_DATABASE_PASSWORD")
-             );
-             PreparedStatement ps = conn.prepareStatement(
-                 "SELECT password_hash FROM user_info WHERE email = ?"
-             )
-        ) {
+                System.getProperty("JDBC_DATABASE_URL"),
+                System.getProperty("JDBC_DATABASE_USERNAME"),
+                System.getProperty("JDBC_DATABASE_PASSWORD")
+            );
+            PreparedStatement ps = conn.prepareStatement(sql))
+        {
             ps.setString(1, email);
+            ps.setString(2, rawPassword);
+
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) {
-                    return false; // no such email
-                }
-                storedHash = rs.getString("password_hash");
+                return rs.next();  // if we get any row back, the password matched
             }
         }
-        String candidate = rawPassword.toLowerCase();
-
-        return PASSWORD_ENCODER.matches(candidate, storedHash);
     }
 }
