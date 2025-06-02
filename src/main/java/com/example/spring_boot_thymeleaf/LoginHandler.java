@@ -8,8 +8,6 @@ import java.sql.SQLException;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-
 public class LoginHandler {
 
     private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
@@ -22,6 +20,7 @@ public class LoginHandler {
                 String query = "INSERT INTO users (email, password) VALUES (?, ?)";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setString(1, email);
+                    ps.setString(2, hashedPassword);
                     ps.setString(2, hashedPassword);
 
                     int affectedRows = ps.executeUpdate();
@@ -49,7 +48,7 @@ public class LoginHandler {
                  System.getProperty("JDBC_DATABASE_PASSWORD")
              );
              PreparedStatement ps = conn.prepareStatement(
-                 "SELECT password FROM users WHERE email = ?"
+                 "SELECT password_hash FROM users WHERE email = ?"
              )
         ) {
             ps.setString(1, email);
@@ -57,10 +56,11 @@ public class LoginHandler {
                 if (!rs.next()) {
                     return false; // no such email
                 }
-                storedHash = rs.getString("password");
+                storedHash = rs.getString("password_hash");
             }
         }
+        String candidate = rawPassword.toLowerCase();
 
-        return PASSWORD_ENCODER.matches(rawPassword, storedHash);
+        return PASSWORD_ENCODER.matches(candidate, storedHash);
     }
 }
