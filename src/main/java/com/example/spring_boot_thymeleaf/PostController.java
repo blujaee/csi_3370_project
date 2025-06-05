@@ -70,7 +70,7 @@ public class PostController {
         String dateJoined = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         
         Hasher hasher = new Hasher();
-        String passwordHash = hasher.hash(password, 12);
+        String passwordHash = hasher.hash(password);
 
         // String id = UUID.randomUUID().toString();
         UserInfo user = new UserInfo(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
