@@ -15,10 +15,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class PostController {
     private UserFetcher uf;
-    private UserRepository up;
-    public PostController(UserFetcher uf, UserRepository up) {
+    public PostController(UserFetcher uf) {
         this.uf = uf;
-        this.up = up;
     }
 
     // @RequestParam ... binds form data to a method argument in a controller
