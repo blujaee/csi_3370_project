@@ -8,15 +8,8 @@ import org.mindrot.jbcrypt.BCrypt;
 // !!! When validating passwords, be sure to the use the correct costFactor !!!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class Hasher {
-    public String hash(String password, int costFactor) {
-        String salt = BCrypt.gensalt(costFactor);
-        String hash = BCrypt.hashpw(password, salt);
-
-        return hash;
-    }
-
     public String hash(String password) {
-        String salt = BCrypt.gensalt(12);
+        String salt = BCrypt.gensalt(6);
         String hash = BCrypt.hashpw(password, salt);
 
         return hash;
