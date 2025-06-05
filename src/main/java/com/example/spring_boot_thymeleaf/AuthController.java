@@ -3,6 +3,7 @@ package com.example.spring_boot_thymeleaf;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {

@@ -11,20 +11,26 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public AuthenticationProvider customAuthenticationProvider() {
-        return new CustomAuthenticationProvider();
-    }
-
+    // 1) Expose a PasswordEncoder bean (BCrypt) if you need it elsewhere
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // 2) Expose your CustomAuthenticationProvider as a bean
+    @Bean
+    public AuthenticationProvider customAuthProvider() {
+        return new CustomAuthenticationProvider();
+    }
+
+    // 3) Register both the HttpSecurity rules and the provider
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-          .authenticationProvider(customAuthenticationProvider())
+          // register your provider here
+          .authenticationProvider(customAuthProvider())
+
+          // authorization rules
           .authorizeHttpRequests(auth -> auth
               .requestMatchers(
                   "/login",
@@ -33,6 +39,8 @@ public class SecurityConfig {
               ).permitAll()
               .anyRequest().authenticated()
           )
+
+          // form‐login config
           .formLogin(form -> form
               .loginPage("/login")
               .loginProcessingUrl("/login")
@@ -40,6 +48,8 @@ public class SecurityConfig {
               .defaultSuccessUrl("/", /*alwaysUse=*/ true)
               .permitAll()
           )
+
+          // logout config
           .logout(logout -> logout
               .logoutUrl("/logout")
               .logoutSuccessUrl("/login?logout")

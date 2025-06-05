@@ -2,14 +2,11 @@ package com.example.spring_boot_thymeleaf;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import org.springframework.security.core.userdetails.User;        
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.SQLException;
@@ -19,8 +16,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication)
-            throws AuthenticationException
+            throws AuthenticationException 
     {
+        System.out.println("[AUTH] >>> CustomAuthenticationProvider.authenticate() called");
         String email = authentication.getName();
         String rawPassword = authentication.getCredentials().toString();
 
@@ -32,12 +30,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             UserDetails user = new User(
                 email,
                 "",
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+                Collections.singletonList(() -> "ROLE_USER")
             );
             return new UsernamePasswordAuthenticationToken(user, rawPassword, user.getAuthorities());
         }
         catch (ClassNotFoundException | SQLException e) {
-            throw new AuthenticationServiceException("Error accessing database", e);
+            throw new AuthenticationServiceException("Database error", e);
         }
     }
 

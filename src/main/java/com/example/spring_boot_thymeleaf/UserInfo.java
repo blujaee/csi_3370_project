@@ -33,6 +33,7 @@ public class UserInfo {
     @Column(name = "date_joined")
     private String date_joined;
 
+    @Column(name = "password_hash")
     private String passwordHash;
 
     public UserInfo() {}
