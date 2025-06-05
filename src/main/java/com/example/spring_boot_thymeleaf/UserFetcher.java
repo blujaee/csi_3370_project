@@ -1,12 +1,19 @@
 package com.example.spring_boot_thymeleaf;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserFetcher {
-    @Autowired
     private UserRepository userRepository;
+    private JdbcTemplate jdbcTemplate;
+    public UserFetcher(JdbcTemplate jdbcTemplate, UserRepository userRepository) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.userRepository = userRepository;
+    }
 
     public UserInfo getUserByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -30,5 +37,10 @@ public class UserFetcher {
 
     public UserInfo saveUser(UserInfo user) {
         return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserInfo> findAll() {
+        return jdbcTemplate.query("select * FROM user_info", new UserRowMapper());
     }
 }

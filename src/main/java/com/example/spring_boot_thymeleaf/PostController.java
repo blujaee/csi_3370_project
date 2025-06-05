@@ -1,12 +1,13 @@
 package com.example.spring_boot_thymeleaf;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 
@@ -50,7 +51,10 @@ public class PostController {
         model.addAttribute("searchType", searchType);
         model.addAttribute("searchValuePrimary", searchValuePrimary);
         model.addAttribute("searchValueSecondary", searchValueSecondary);
-        
+
+        List<UserInfo> userList = uf.findAll();
+        model.addAttribute("userList", userList);
+
         // Page will go here with patient info if request was successful
         return "patient-info";
     }
@@ -72,7 +76,6 @@ public class PostController {
         Hasher hasher = new Hasher();
         String passwordHash = hasher.hash(password);
 
-        // String id = UUID.randomUUID().toString();
         UserInfo user = new UserInfo(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
         
         user.setId(null);
@@ -92,5 +95,37 @@ public class PostController {
         
         // Page will go here with patient info if request was successful
         return "add-confirmation";
+    }
+
+    @GetMapping("/")
+    public String home(Model model) {
+        model.addAttribute("test", "Home page! This text is coming from the controller. Don't worry if that statement doesn't make sense to you, it barely makes sense to me");
+        model.addAttribute("moreTest", "How do I center a div again?");
+
+        return "home";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        return "login";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model) {
+        List<UserInfo> userList = uf.findAll();
+        
+        model.addAttribute("userList", userList);
+        System.out.println(userList.get(0).getEmail());
+        return "search";
+    }
+
+    @GetMapping("/add")
+    public String add(Model model) {
+        return "add";
+    }
+
+    @GetMapping("/help")
+    public String help(Model model) {
+        return "help";
     }
 }

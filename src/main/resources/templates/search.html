@@ -20,11 +20,21 @@
             <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/add}">Add New Patient</a>
             <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/help}">Help</a>
         </div>
+
         <form class="form-inline">
     			<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
     			<button id="searchbutton" type="button" onclick="showTable()">Search</button>
     	</form>
     </nav>
+
+    <!-- List<UserInfo> userList -->
+    <tr th:each="user: ${userList}" th:if="user != null">
+        <td th:text="${user.getFirstName()}"></td>
+        <td th:text="${user.getLastName()}"></td>
+        <td th:text="${user.getEmail()}"></td>
+        <br>
+    </tr>
+
 
     <script>
       function showTable() {
