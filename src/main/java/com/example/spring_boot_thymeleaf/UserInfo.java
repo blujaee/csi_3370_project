@@ -1,58 +1,81 @@
 package com.example.spring_boot_thymeleaf;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 
-@Entity
-@Table(name = "user_info")
+@Table("user_info")
 public class UserInfo {
     @Id
-    @Column(name = "id")
+    @Column("id")
     private String id;
 
-    @Column(name = "first_name")
-    private String first_name;
+    @Column("first_name")
+    private String firstName;
 
-    @Column(name = "last_name")
-    private String last_name;
+    @Column("last_name")
+    private String lastName;
 
-    @Column(name = "phone")
+    @Column("phone")
     private String phone;
 
-    @Column(name = "ssn")
-    private String ssn;
+    @Column("ssn")
+    private String SSN;
 
-    @Column(name = "address")
+    @Column("address")
     private String address;
 
-    @Column(name = "birthdate")
+    @Column("birthdate")
     private String birthdate;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column("email")
     private String email;
 
-    @Column(name = "date_joined")
-    private String date_joined;
+    @Column("date_joined")
+    private String dateJoined;
+
+    @Column("role")
+    private String role;
+
+    @Column("password_hash")
+    private String passwordHash;
 
     public UserInfo() {}
+
+    // String id
+    public UserInfo(String firstName, String lastName, String phone, String SSN,
+                    String address, String birthdate, String email, String role, String dateJoined, String passwordHash) {
+        // this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.SSN = SSN;
+        this.address = address;
+        this.birthdate = birthdate;
+        this.email = email;
+        this.role = role;
+        this.dateJoined = dateJoined;
+        this.passwordHash = passwordHash;
+    }
 
     public String getId() {
         return id;
     }
 
     public String getFirstName() {
-        return first_name;
+        return firstName;
     }
 
     public String getLastName() {
-        return last_name;
+        return lastName;
     }
 
     public String getPhone() {
         return phone;
     }
     
-    public String getSsn() {
-        return ssn;
+    public String getSSN() {
+        return SSN;
     }
 
     public String getAddress() {
@@ -60,7 +83,7 @@ public class UserInfo {
     }
 
     public String getDateJoined() {
-        return date_joined;
+        return dateJoined;
     }
 
     public String getEmail() {
@@ -71,24 +94,32 @@ public class UserInfo {
         return birthdate;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setFirstName(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setLastName(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public void setSsn(String ssn) {
-        this.ssn = ssn;
+    public void setSSN(String SSN) {
+        this.SSN = SSN;
     }
 
     public void setAddress(String address) {
@@ -103,7 +134,15 @@ public class UserInfo {
         this.email = email;
     }
 
-    public void setDateJoined(String date_joined) {
-        this.date_joined = date_joined;
+    public void setDateJoined(String dateJoined) {
+        this.dateJoined = dateJoined;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }
