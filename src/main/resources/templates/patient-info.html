@@ -27,12 +27,14 @@
         <p><span th:text="${user.getEmail()}"></p>
         <p><span th:text="${user.getFirstName() + ' ' + user.getLastName()}"></p>
         <p><span th:text="${user.getId()}"></p>
-            <p><span th:text="${user.getBirthdate()}"></p>
+        <p><span th:text="${user.getBirthdate()}"></p>
+        <p><span th:text="${user.getRole()}"></p>
+        <a class="fw-bold link-underline" draggable="false" th:href="@{/search}">Back</a>
     </div>
 
     <!-- If the user does NOT exist: -->
     <div class="text-center mt-5vw" th:if="${user == null}">
-        <p>No user found with email <span th:text="${email}"></span>.</p>
+        <p>No user found with <span th:text="${searchType + ' ' + searchValuePrimary + ' ' + searchValueSecondary}">"></span>.</p>
         <a class="fw-bold link-underline" draggable="false" th:href="@{/search}">Back</a>
     </div>
 </body>

@@ -25,23 +25,65 @@
     <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
 		<div class="card p-4">
 			<h3 class="text-center mb-4">Add Patient</h3>
-			<form th:action="@{/submit-add-patient}"  method="post">
+			<form th:action="@{/submit-add-patient}" method="post">
 				<div class="mb-3">
 					<label for="email" class="form-label">Client Email</label>
-					<input type="email" class="form-control" name="email" placeholder="Email" required>
+					<input type="email" class="form-control" th:name="email" placeholder="Email" required>
 				</div>
-                <div class="mb-3">
+				<div class="mb-3">
 					<label class="form-label">First Name</label>
-					<input type="email" class="form-control" name="firstName" placeholder="First Name" required>
+					<input type="text" class="form-control" th:name="firstName" placeholder="First Name" required>
 				</div>
-                <div class="mb-3">
+				<div class="mb-3">
 					<label class="form-label">Last Name</label>
-					<input type="email" class="form-control" name="lastName" placeholder="Last Name" required>
+					<input type="text" class="form-control" th:name="lastName" placeholder="Last Name" required>
 				</div>
-				<button type="submit" class="btn btn-primary w-100">Search</button>
+				<div class="mb-3">
+					<label class="form-label">Phone</label>
+					<input type="text" class="form-control" th:name="phone" placeholder="Phone" required>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">SSN</label>
+					<input type="text" class="form-control" th:name="ssn" placeholder="XXX-XX-XXXX" pattern="\d{3}-\d{2}-\d{4}" title="SSN format must be XXX-XX-XXXX" required>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Role</label>
+					<select class="form-select" th:name="role" required>
+						<option value="">Select Role</option>
+						<option value="PATIENT">PATIENT</option>
+						<option value="MEDICAL STAFF">MEDICAL STAFF</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Birthdate</label>
+					<input type="date" class="form-control" th:name="birthdate" required>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Address</label>
+					<input type="text" class="form-control" th:name="address" placeholder="Address" required>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Password</label>
+					<input type="password" class="form-control" th:name="password" placeholder="Password" required>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Confirm Password</label>
+					<input type="password" class="form-control" th:name="passwordConfirmation" placeholder="Confirm Password" required>
+				</div>
+				<button type="submit" class="btn btn-primary w-100">Submit</button>
 			</form>
 		</div>
 	</div>
+	<script>
+		document.querySelector("form").addEventListener("submit", (e) => {
+			const pwd = this.querySelector('[name="password"]').value;
+			const confirmPwd = this.querySelector('[name="passwordConfirmation"]').value;
+			if (pwd !== confirmPwd) {
+				e.preventDefault();
+				alert('Passwords do not match!');
+			}
+		});
+	</script>
 </body>
 
 </html>
