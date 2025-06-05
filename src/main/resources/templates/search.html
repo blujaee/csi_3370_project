@@ -22,18 +22,48 @@
         </div>
     </nav>
 
-    <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
+    <div class="d-flex justify-content-center align-items-center" style="margin-top:5vw">
 		<div class="card p-4">
 			<h3 class="text-center mb-4">Database Search</h3>
 			<form th:action="@{/submit-search}"  method="post">
-				<div class="mb-3">
-					<label for="email" class="form-label">Client Email</label>
-					<input type="email" class="form-control" name="email" placeholder="Email" required>
-				</div>
+                <label for="searchType" class="form-label">Search by</label>
+                <select class="form-select" id="searchType" th:name="searchType" required>
+                    <option value="email">Email</option>
+                    <option value="id">ID</option>
+                    <option value="phone">Phone</option>
+                    <option value="name">Name</option>
+                    <option value="ssn">SSN</option>
+                </select>
+
+				<div class="mb-3 pt-2">
+					<label for="searchValue" class="form-label">Client Information</label>
+					<input type="text" class="form-control mb-2" pattern="^\S+$" 
+                        id="searchValuePrimary" th:name="searchValuePrimary" placeholder="Enter Client Info" required 
+                        title="No spaces in input.">
+                    <input type="text" class="form-control mb-2" pattern="^\S+$" 
+                        id="searchValueSecondary" th:name="searchValueSecondary" placeholder="Enter Client Secondary Info" 
+                        title="No spaces in input.">
 				<button type="submit" class="btn btn-primary w-100">Search</button>
 			</form>
 		</div>
 	</div>
-</body>
 
+    <script>
+        // When the user chooses a search option, update necessary input fields
+        const searchType = document.getElementById("searchType");
+        const secondarySearch = document.getElementById("searchValueSecondary");
+
+        secondarySearch.style.display = "none";
+        secondarySearch.required = false;
+        searchType.addEventListener("change", () => {
+            if (searchType.value === "name") {
+                secondarySearch.style.display = "block";
+                secondarySearch.required = true;
+            } else {
+                secondarySearch.style.display = "none";
+                secondarySearch.required = false;
+            }
+        });
+    </script>
+</body>
 </html>
