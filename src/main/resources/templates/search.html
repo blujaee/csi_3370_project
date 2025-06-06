@@ -20,50 +20,48 @@
             <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/add}">Add New Patient</a>
             <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/help}">Help</a>
         </div>
+
+        <form class="form-inline">
+    			<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    			<button id="searchbutton" type="button" onclick="showTable()">Search</button>
+    	</form>
     </nav>
 
-    <div class="d-flex justify-content-center align-items-center" style="margin-top:5vw">
-		<div class="card p-4">
-			<h3 class="text-center mb-4">Database Search</h3>
-			<form th:action="@{/submit-search}"  method="post">
-                <label for="searchType" class="form-label">Search by</label>
-                <select class="form-select" id="searchType" th:name="searchType" required>
-                    <option value="email">Email</option>
-                    <option value="id">ID</option>
-                    <option value="phone">Phone</option>
-                    <option value="name">Name</option>
-                    <option value="ssn">SSN</option>
-                </select>
+    <!-- List<UserInfo> userList -->
+    <tr th:each="user: ${userList}" th:if="user != null">
+        <td th:text="${user.getFirstName()}"></td>
+        <td th:text="${user.getLastName()}"></td>
+        <td th:text="${user.getEmail()}"></td>
+        <br>
+    </tr>
 
-				<div class="mb-3 pt-2">
-					<label for="searchValue" class="form-label">Client Information</label>
-					<input type="text" class="form-control mb-2" pattern="^\S+$" 
-                        id="searchValuePrimary" th:name="searchValuePrimary" placeholder="Enter Client Info" required 
-                        title="No spaces in input.">
-                    <input type="text" class="form-control mb-2" pattern="^\S+$" 
-                        id="searchValueSecondary" th:name="searchValueSecondary" placeholder="Enter Client Secondary Info" 
-                        title="No spaces in input.">
-				<button type="submit" class="btn btn-primary w-100">Search</button>
-			</form>
-		</div>
-	</div>
 
     <script>
-        // When the user chooses a search option, update necessary input fields
-        const searchType = document.getElementById("searchType");
-        const secondarySearch = document.getElementById("searchValueSecondary");
-
-        secondarySearch.style.display = "none";
-        secondarySearch.required = false;
-        searchType.addEventListener("change", () => {
-            if (searchType.value === "name") {
-                secondarySearch.style.display = "block";
-                secondarySearch.required = true;
-            } else {
-                secondarySearch.style.display = "none";
-                secondarySearch.required = false;
-            }
-        });
+      function showTable() {
+	      let data = [
+	      ["John", "Doe", "05/24/2002", "248-420-2000" ],
+	      ["Jane", "Doe", "01/09/2004", "616-130-4567"], 
+	      ["Mark", "Smith", "02/02/2000", "123-234-5678"],
+	      ["Dave", "Jones", "07/16/2006", "543-210-9876"]];
+	      //^^^omit this false array when we have actual data to put up
+        var invData = " ";
+	      const body = document.body,
+		    tbl = document.createElement('table');
+	      tbl.style.width = '100px'; 
+	      tbl.style.border = '1px solid black';
+	      //number of rows then set number of columns for how many parameters
+	      for (let i = 0; i < data.length; i++) {
+		      const tr = tbl.insertRow();
+		      for(let j = 0; j < 4; j++) {
+			      const td = tr.insertCell();
+            invData = data[i][j];
+			      td.appendChild(document.createTextNode(invData));
+			      td.style.border = '1px solid black';
+		      }
+	      }
+        body.appendChild(tbl);
+      }
     </script>
 </body>
+
 </html>
