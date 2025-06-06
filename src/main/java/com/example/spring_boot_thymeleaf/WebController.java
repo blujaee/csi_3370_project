@@ -13,9 +13,9 @@ import org.springframework.stereotype.Controller;
 
 // Form submission and user input handling
 @Controller
-public class PostController {
+public class WebController {
     private UserFetcher uf;
-    public PostController(UserFetcher uf) {
+    public WebController(UserFetcher uf) {
         this.uf = uf;
     }
 
