@@ -8,12 +8,12 @@ import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import org.springframework.stereotype.Controller;
 
 // Form submission and user input handling
 @Controller
 public class WebController {
+    // Constructor injection
     private UserFetcher uf;
     public WebController(UserFetcher uf) {
         this.uf = uf;
@@ -25,7 +25,7 @@ public class WebController {
                     @RequestParam("searchValuePrimary") String searchValuePrimary, 
                     @RequestParam("searchValueSecondary") String searchValueSecondary, 
                     Model model) {
-        UserInfo user = new UserInfo();
+        User user = new User();
 
         switch (searchType) {
             case "email":
@@ -50,7 +50,7 @@ public class WebController {
         model.addAttribute("searchValuePrimary", searchValuePrimary);
         model.addAttribute("searchValueSecondary", searchValueSecondary);
 
-        List<UserInfo> userList = uf.findAll();
+        List<User> userList = uf.findAll();
         model.addAttribute("userList", userList);
 
         // Page will go here with patient info if request was successful
@@ -74,7 +74,7 @@ public class WebController {
         Hasher hasher = new Hasher();
         String passwordHash = hasher.hash(password);
 
-        UserInfo user = new UserInfo(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
+        User user = new User(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
         
         user.setId(null);
         uf.saveUser(user);
@@ -110,7 +110,7 @@ public class WebController {
 
     @GetMapping("/search")
     public String search(Model model) {
-        List<UserInfo> userList = uf.findAll();
+        List<User> userList = uf.findAll();
         
         model.addAttribute("userList", userList);
         System.out.println(userList.get(0).getEmail());

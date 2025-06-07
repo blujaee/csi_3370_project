@@ -1,15 +1,13 @@
 package com.example.spring_boot_thymeleaf;
 
 import java.sql.SQLException;
-
+import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 
-import java.sql.ResultSet;
-
-public class UserRowMapper implements RowMapper<UserInfo> {
-    public UserInfo mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
-        UserInfo user = new UserInfo();
+public class UserRowMapper implements RowMapper<User> {
+    public User mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+        User user = new User();
 
         user.setAddress(rs.getString("id"));
         user.setBirthdate(rs.getString("birthdate"));

@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 @Table("user_info")
-public class UserInfo {
+public class User {
     @Id
     @Column("id")
     private String id;
@@ -40,10 +40,10 @@ public class UserInfo {
     @Column("password_hash")
     private String passwordHash;
 
-    public UserInfo() {}
+    public User() {}
 
     // String id
-    public UserInfo(String firstName, String lastName, String phone, String SSN,
+    public User(String firstName, String lastName, String phone, String SSN,
                     String address, String birthdate, String email, String role, String dateJoined, String passwordHash) {
         // this.id = id;
         this.firstName = firstName;
