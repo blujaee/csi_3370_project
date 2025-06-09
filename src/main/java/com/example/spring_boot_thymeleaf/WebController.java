@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 // Form submission and user input handling
@@ -25,7 +27,7 @@ public class WebController {
                     @RequestParam("searchValuePrimary") String searchValuePrimary, 
                     @RequestParam("searchValueSecondary") String searchValueSecondary, 
                     Model model) {
-        User user = new User();
+        UserInfo user = new UserInfo();
 
         switch (searchType) {
             case "email":
@@ -50,7 +52,7 @@ public class WebController {
         model.addAttribute("searchValuePrimary", searchValuePrimary);
         model.addAttribute("searchValueSecondary", searchValueSecondary);
 
-        List<User> userList = uf.findAll();
+        List<UserInfo> userList = uf.findAll();
         model.addAttribute("userList", userList);
 
         // Page will go here with patient info if request was successful
@@ -74,7 +76,7 @@ public class WebController {
         Hasher hasher = new Hasher();
         String passwordHash = hasher.hash(password);
 
-        User user = new User(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
+        UserInfo user = new UserInfo(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
         
         user.setId(null);
         uf.saveUser(user);
@@ -109,9 +111,11 @@ public class WebController {
     //     return "login";
     // }
 
+    // USER must have role MEDICAL_STAFF to access database search
+    @PreAuthorize("hasRole('ROLE_MEDICAL_STAFF')")
     @GetMapping("/search")
     public String search(Model model) {
-        List<User> userList = uf.findAll();
+        List<UserInfo> userList = uf.findAll();
         
         model.addAttribute("userList", userList);
         System.out.println(userList.get(0).getEmail());

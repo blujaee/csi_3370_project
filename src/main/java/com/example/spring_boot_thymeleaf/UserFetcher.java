@@ -15,32 +15,32 @@ public class UserFetcher {
         this.userRepository = userRepository;
     }
 
-    public User getUserByEmail(String email) {
+    public UserInfo getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public User getUserById(String id) {
+    public UserInfo getUserById(String id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User getUserByName(String firstName, String lastName) {
+    public UserInfo getUserByName(String firstName, String lastName) {
         return userRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
-    public User getUserByPhone(String phone) {
+    public UserInfo getUserByPhone(String phone) {
         return userRepository.findByPhone(phone);
     }
 
-    public User getUserBySSN(String ssn) {
+    public UserInfo getUserBySSN(String ssn) {
         return userRepository.findBySSN(ssn);
     }
 
-    public User saveUser(User user) {
+    public UserInfo saveUser(UserInfo user) {
         return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
-    public List<User> findAll() {
+    public List<UserInfo> findAll() {
         return jdbcTemplate.query("select * FROM user_info", new UserRowMapper());
     }
 }

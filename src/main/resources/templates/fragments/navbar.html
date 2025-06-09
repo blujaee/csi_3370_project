@@ -1,0 +1,23 @@
+<!-- fragments/navbar.html -->
+<!-- Allows for quick insertion of the navbar into other pages -->
+<!-- Simply add <div th:replace="fragments/navbar :: navbar"></div> to the top of the html body-->
+<nav th:fragment="navbar" class="navbar navbar-expand-sm navbar-light bg-dark p-2 px-3">
+    <a class="navbar-brand fw-bold" style="color:#507fff">Co-op Health</a>
+
+    <div class="navbar-nav">
+        <a class="nav-item nav-link" draggable="false" id="homeTag" style="color: rgb(175, 175, 175) !important"
+            th:href="@{/}">Home</a>
+
+        <a class="nav-item nav-link" draggable="false" id="loginTag" style="color: rgb(175, 175, 175) !important"
+            th:href="@{/login}">Login</a>
+
+        <a class="nav-item nav-link" draggable="false" id="searchTag" style="color: rgb(175, 175, 175) !important"
+            th:href="@{/search}">Search Database</a>
+
+        <a class="nav-item nav-link" draggable="false" id="addTag" style="color: rgb(175, 175, 175) !important"
+            th:href="@{/add}">Add New Patient</a>
+
+        <a class="nav-item nav-link" id="helpTag" draggable="false" style="color: rgb(175, 175, 175) !important"
+            th:href="@{/help}">Help</a>
+    </div>
+</nav>

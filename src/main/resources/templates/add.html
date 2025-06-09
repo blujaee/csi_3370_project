@@ -10,24 +10,15 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm navbar-light bg-dark p-2 px-3">
-        <a class="navbar-brand fw-bold" style="color:#507fff">Co-op Health</a>
-
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/}">Home</a>
-            <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/login}">Login</a>
-            <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/search}">Search Database</a>
-            <a class="nav-item nav-link active fw-bold" draggable="false" style="color: rgb(255, 255, 255) !important" th:href="@{/add}">Add New Patient</a>
-            <a class="nav-item nav-link" draggable="false" style="color: rgb(175, 175, 175) !important" th:href="@{/help}">Help</a>
-        </div>
-    </nav>
-
+	<!-- Inject navbar from fragments/navbar.html -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+	
     <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
 		<div class="card p-4">
-			<h3 class="text-center mb-4">Add Patient</h3>
+			<h3 class="text-center mb-4">Register</h3>
 			<form th:action="@{/submit-add-patient}" method="post">
 				<div class="mb-3">
-					<label for="email" class="form-label">Client Email</label>
+					<label for="email" class="form-label">Email</label>
 					<input type="email" class="form-control" th:name="email" placeholder="Email" required>
 				</div>
 				<div class="mb-3">
