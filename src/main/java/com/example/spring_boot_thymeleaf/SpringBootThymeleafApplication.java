@@ -1,52 +1,69 @@
 package com.example.spring_boot_thymeleaf;
 
+import java.security.Principal;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-import org.springframework.stereotype.Controller;
-
 @SpringBootApplication
 @Controller
 public class SpringBootThymeleafApplication {
-	public static void main(String[] args) {
-		// 1) Load .env from your project root
+
+    private final UserFetcher userFetcher;
+
+    public SpringBootThymeleafApplication(UserFetcher userFetcher) {
+        this.userFetcher = userFetcher;
+    }
+
+    static {
+        // load .env into system properties for both app and tests
         Dotenv dotenv = Dotenv.configure()
                               .filename(".env")
+                              .ignoreIfMissing()
                               .load();
 
-        // 2) Push each JDBC variable into System properties
         System.setProperty("JDBC_DATABASE_URL",      dotenv.get("JDBC_DATABASE_URL"));
         System.setProperty("JDBC_DATABASE_USERNAME", dotenv.get("JDBC_DATABASE_USERNAME"));
         System.setProperty("JDBC_DATABASE_PASSWORD", dotenv.get("JDBC_DATABASE_PASSWORD"));
+    }
 
-        // 3) Now launch Spring Boot
+    public static void main(String[] args) {
         SpringApplication.run(SpringBootThymeleafApplication.class, args);
-	}
+    }
 
-	@GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("test", "Home page! This text is coming from the controller. Don't worry if that statement doesn't make sense to you, it barely makes sense to me");
-        model.addAttribute("moreTest", "How do I center a div again?");
+    // Handle both "/" (after login) and "/home"
+    @GetMapping({"/", "/home"})
+    public String home(Principal principal, Model model) {
+        // spring-security will have populated principal.getName() = the user’s email
+        String email = principal.getName();
 
-        return "home";
+        // fetch the user record from Supabase via your UserFetcher
+        UserInfo me = userFetcher.getUserByEmail(email);
+
+        // add to the model for Thymeleaf
+        model.addAttribute("firstName", me.getFirstName());
+        model.addAttribute("lastName",  me.getLastName());
+
+        return "home";  // resolves to home.html
     }
 
     @GetMapping("/search")
-    public String search(Model model) {
+    public String search() {
         return "search";
     }
 
     @GetMapping("/add")
-    public String add(Model model) {
+    public String add() {
         return "add";
     }
 
     @GetMapping("/help")
-    public String help(Model model) {
+    public String help() {
         return "help";
     }
 }
