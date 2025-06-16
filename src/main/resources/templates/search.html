@@ -28,40 +28,22 @@
     </nav>
 
     <!-- List<UserInfo> userList -->
-    <tr th:each="user: ${userList}" th:if="user != null">
-        <td th:text="${user.getFirstName()}"></td>
-        <td th:text="${user.getLastName()}"></td>
-        <td th:text="${user.getEmail()}"></td>
-        <br>
-    </tr>
-
-
-    <script>
-      function showTable() {
-	      let data = [
-	      ["John", "Doe", "05/24/2002", "248-420-2000" ],
-	      ["Jane", "Doe", "01/09/2004", "616-130-4567"], 
-	      ["Mark", "Smith", "02/02/2000", "123-234-5678"],
-	      ["Dave", "Jones", "07/16/2006", "543-210-9876"]];
-	      //^^^omit this false array when we have actual data to put up
-        var invData = " ";
-	      const body = document.body,
-		    tbl = document.createElement('table');
-	      tbl.style.width = '100px'; 
-	      tbl.style.border = '1px solid black';
-	      //number of rows then set number of columns for how many parameters
-	      for (let i = 0; i < data.length; i++) {
-		      const tr = tbl.insertRow();
-		      for(let j = 0; j < 4; j++) {
-			      const td = tr.insertCell();
-            invData = data[i][j];
-			      td.appendChild(document.createTextNode(invData));
-			      td.style.border = '1px solid black';
-		      }
-	      }
-        body.appendChild(tbl);
-      }
-    </script>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user: ${userList}" th:if="user != null">
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td th:text="${user.email}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 
 </html>
