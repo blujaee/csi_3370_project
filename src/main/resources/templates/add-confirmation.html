@@ -11,9 +11,9 @@
 
 <body>
     <!-- Inject navbar from fragments/navbar.html -->
-    <div th:replace="fragments/navbar :: navbar"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="text-center mt-5vw">
+    <div class="text-center mt-5vw" th:if="${!error}">
         <p><span th:text="${id}"></span></p>
         <p><span th:text="${firstName}"></span></p>
         <p><span th:text="${lastName}"></span></p>
@@ -24,6 +24,10 @@
         <p><span th:text="${email}"></span></p>
         <p><span th:text="${role}"></span></p>
         <a class="fw-bold link-underline" draggable="false" th:href="@{/add}">Back</a>
+    </div>
+    <div class="text-center mt-5vw" th:if="${error}">
+        <p>ERROR: Could not add user to database.</p>
+        <p>Please verify credentials are correctly formatted and try again.</p>
     </div>
 </body>
 

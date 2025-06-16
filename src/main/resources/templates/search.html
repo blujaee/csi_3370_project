@@ -11,7 +11,7 @@
 
 <body>
     <!-- Inject navbar from fragments/navbar.html -->
-    <div th:replace="fragments/navbar :: navbar"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <div class="d-flex justify-content-center align-items-center" style="margin-top:5vw">
 		<div class="card p-4">
@@ -55,6 +55,23 @@
                 secondarySearch.required = false;
             }
         });
+
+        const phoneInput = document.querySelector("input[name='phone']");
+        phoneInput.addEventListener("input", validatePhoneInput);
+        function validatePhoneInput(e) {
+            let input = e.target.value.replace(/\D/g, "");
+
+            if (input.length > 10) {
+                input = input.slice(0, 10);
+            }
+
+            let parts = [];
+            if (input.length > 0) parts.push(input.slice(0, 3));
+            if (input.length > 3) parts.push(input.slice(3, 6));
+            if (input.length > 6) parts.push(input.slice(6, 10));
+
+            e.target.value = parts.join("-");
+        }
     </script>
 </body>
 </html>

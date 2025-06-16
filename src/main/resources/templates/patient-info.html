@@ -11,7 +11,7 @@
 
 <body>
     <!-- Inject navbar from fragments/navbar.html -->
-    <div th:replace="fragments/navbar :: navbar"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <!-- If the user does exist: -->
     <div class="text-center mt-5vw" th:if="${user}">

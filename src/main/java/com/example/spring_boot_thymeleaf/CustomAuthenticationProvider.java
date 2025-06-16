@@ -15,16 +15,8 @@ import java.sql.SQLException;
 import java.util.Collections;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-    // Implicit injection (generally has caused more errors than constructor injection,
-    // may be changed in the future
-    // For retrieving user role from database (if user exists)
     @Autowired
     private UserFetcher uf;
-
-    // Not needed with @Autowired above
-    // public CustomAuthenticationProvider(UserFetcher uf) {
-    //     this.uf = uf;
-    // }
 
     @Override
     public Authentication authenticate(Authentication authentication)

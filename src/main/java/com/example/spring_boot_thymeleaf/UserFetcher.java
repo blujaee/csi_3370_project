@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserFetcher {
-    // Constructor injection
     private UserRepository userRepository;
     private JdbcTemplate jdbcTemplate;
     public UserFetcher(JdbcTemplate jdbcTemplate, UserRepository userRepository) {

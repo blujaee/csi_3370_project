@@ -2,21 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Co-op Health</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <link rel="stylesheet" href="custom_classes.css">
+	<meta charset="UTF-8" />
+	<title>Co-op Health</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+	<link rel="stylesheet" href="custom_classes.css">
+	<script src="/js/validateUserInput.js"></script>	
 </head>
 
 <body>
 	<!-- Inject navbar from fragments/navbar.html -->
-    <div th:replace="fragments/navbar :: navbar"></div>
-	
-    <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
 		<div class="card p-4">
 			<h3 class="text-center mb-4">Register</h3>
-			<form th:action="@{/submit-add-patient}" method="post">
+			<form th:action="@{/add-user}" method="post">
 				<div class="mb-3">
 					<label for="email" class="form-label">Email</label>
 					<input type="email" class="form-control" th:name="email" placeholder="Email" required>
@@ -31,11 +32,14 @@
 				</div>
 				<div class="mb-3">
 					<label class="form-label">Phone</label>
-					<input type="text" class="form-control" th:name="phone" placeholder="Phone" required>
+					<input type="text" inputmode="numeric" maxlength="12" class="form-control" th:name="phone"
+						pattern="\d{3}-\d{3}-\d{4}" title="Format: XXX-XXX-XXXX"	
+						placeholder="Phone" required>
 				</div>
 				<div class="mb-3">
 					<label class="form-label">SSN</label>
-					<input type="text" class="form-control" th:name="ssn" placeholder="XXX-XX-XXXX" pattern="\d{3}-\d{2}-\d{4}" title="SSN format must be XXX-XX-XXXX" required>
+					<input type="text" inputmode="numeric" maxlength="11" class="form-control" th:name="ssn" placeholder="XXX-XX-XXXX"
+						pattern="\d{3}-\d{2}-\d{4}" title="SSN format must be XXX-XX-XXXX" required>
 				</div>
 				<div class="mb-3">
 					<label class="form-label">Role</label>
@@ -59,22 +63,13 @@
 				</div>
 				<div class="mb-3">
 					<label class="form-label">Confirm Password</label>
-					<input type="password" class="form-control" th:name="passwordConfirmation" placeholder="Confirm Password" required>
+					<input type="password" class="form-control" th:name="passwordConfirmation"
+						placeholder="Confirm Password" required>
 				</div>
 				<button type="submit" class="btn btn-primary w-100">Submit</button>
 			</form>
 		</div>
 	</div>
-	<script>
-		document.querySelector("form").addEventListener("submit", (e) => {
-			const pwd = this.querySelector('[name="password"]').value;
-			const confirmPwd = this.querySelector('[name="passwordConfirmation"]').value;
-			if (pwd !== confirmPwd) {
-				e.preventDefault();
-				alert('Passwords do not match!');
-			}
-		});
-	</script>
 </body>
 
 </html>

@@ -3,6 +3,7 @@ package com.example.spring_boot_thymeleaf;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
+import java.util.regex.Pattern;
 
 @Table("user_info")
 public class UserInfo {
@@ -40,9 +41,11 @@ public class UserInfo {
     @Column("password_hash")
     private String passwordHash;
 
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^\\d{3}-\\d{3}-\\d{4}$");
+    private static final Pattern SSN_PATTERN = Pattern.compile("^\\d{3}-\\d{2}-\\d{4}$");
+
     public UserInfo() {}
 
-    // String id
     public UserInfo(String firstName, String lastName, String phone, String SSN,
                     String address, String birthdate, String email, String role, String dateJoined, String passwordHash) {
         // this.id = id;
@@ -144,5 +147,20 @@ public class UserInfo {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    // Phone format is 123-456-7890
+    public static boolean validatePhoneFormat(String phone) {
+        if (phone == null) return false;
+        return PHONE_PATTERN.matcher(phone).matches();
+    }
+
+    // SSN format is 123-45-6789
+    public static boolean validateSSNFormat(String SSN) {
+        if (SSN == null) return false;
+        if (SSN_PATTERN.matcher(SSN).matches()) {
+            return true;
+        }
+        return false;
     }
 }
