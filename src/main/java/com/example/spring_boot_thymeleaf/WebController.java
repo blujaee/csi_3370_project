@@ -71,12 +71,18 @@ public class WebController {
                         @RequestParam("birthdate") String birthdate, 
                         @RequestParam("address") String address, 
                         @RequestParam("password") String password,
+                        @RequestParam("password") String oldPasswordHash,
                         Model model) {
 
         String dateJoined = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         
-        Hasher hasher = new Hasher();
-        String passwordHash = hasher.hash(password);
+        String passwordHash;
+        if (oldPasswordHash.strip() != "") {
+            Hasher hasher = new Hasher();
+            passwordHash = hasher.hash(password);
+        } else {
+            passwordHash = oldPasswordHash;
+        }
 
         boolean error = false;
         if (!UserInfo.validatePhoneFormat(phone) || !UserInfo.validateSSNFormat(SSN)) {
@@ -163,7 +169,6 @@ public class WebController {
         List<UserInfo> userList = uf.findAll();
         
         model.addAttribute("userList", userList);
-        System.out.println(userList.get(0).getEmail());
         return "search";
     }
 
@@ -223,6 +228,7 @@ public class WebController {
                         @RequestParam("address") String address, 
                         @RequestParam("password") String password,
                         @RequestParam("dateJoined") String dateJoined,
+                        @RequestParam("id") String id,
                         Model model) {
         Hasher hasher = new Hasher();
         String passwordHash = hasher.hash(password);
@@ -236,7 +242,7 @@ public class WebController {
         }
 
         UserInfo user = new UserInfo(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
-        user.setId(null);
+        user.setId(id);
         try {
             uf.saveUser(user);
         } catch (Exception e) {

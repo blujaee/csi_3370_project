@@ -21,6 +21,7 @@
             <form th:action="@{/update-user}" method="post">
                 <input type="hidden" name="id" th:value="${user.id}" />
                 <input type="hidden" name="dateJoined" th:value="${user.dateJoined}">
+                <input type="hidden" name="oldPasswordHash" th:value="${user.passwordHash}">
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
