@@ -10,14 +10,14 @@
     integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
     crossorigin="anonymous"
   >
-  <link rel="stylesheet" href="custom_classes.css">
+  <link rel="stylesheet" th:href="@{/custom_classes.css}">
 </head>
 
 <body>
   <!-- Inject navbar from fragments/navbar.html -->
   <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-  <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
+  <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top: 5vw">
     <div class="card p-4" style="width: 320px;">
       <h3 class="text-center mb-4">Login</h3>
 
@@ -67,7 +67,7 @@
 
       <p class="text-center mt-3">
         Don’t have an account?
-        <a th:href="@{/register}">Register here</a>
+        <a th:href="@{/add}">Register here</a>
       </p>
     </div>
   </div>

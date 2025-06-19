@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -25,41 +26,58 @@ public class WebController {
 
     // @RequestParam ... binds form data to a method argument in a controller
     @PostMapping("/submit-search")
-    public String submitSearch(@RequestParam("searchType") String searchType, 
-                    @RequestParam("searchValuePrimary") String searchValuePrimary, 
-                    @RequestParam("searchValueSecondary") String searchValueSecondary, 
-                    Model model) {
-        UserInfo user = new UserInfo();
-
-        switch (searchType) {
-            case "email":
-                user = uf.getUserByEmail(searchValuePrimary);
-                break;
-            case "id":
-                user = uf.getUserById(searchValuePrimary);
-                break;
-            case "phone":
-                user = uf.getUserByPhone(searchValuePrimary);
-                break;
-            case "name":
-                user = uf.getUserByName(searchValuePrimary, searchValueSecondary);
-                break;
-            case "ssn":
-                user = uf.getUserBySSN(searchValuePrimary);
-                break;
+    public String submitSearch(@RequestParam("searchType") String searchType,
+                            @RequestParam("searchValuePrimary") String searchValuePrimary,
+                            @RequestParam(value = "searchValueSecondary", required = false) String searchValueSecondary,
+                            Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = null;
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userDetails = (User) authentication.getPrincipal();
+            email = userDetails.getUsername();
         }
-        
+        UserInfo user = uf.getUserByEmail(email);
+
         model.addAttribute("user", user);
+
+        List<UserInfo> userList = uf.findAll();
+
         model.addAttribute("searchType", searchType);
         model.addAttribute("searchValuePrimary", searchValuePrimary);
         model.addAttribute("searchValueSecondary", searchValueSecondary);
+        if (searchValuePrimary == null || searchValuePrimary.isEmpty()) {
+            model.addAttribute("userList", userList);
+            model.addAttribute("filtered", false);
+            return "search";
+        }
 
-        List<UserInfo> userList = uf.findAll();
-        model.addAttribute("userList", userList);
+        String normalizedSearchValue = searchValuePrimary.toLowerCase();
 
-        // Page will go here with patient info if request was successful
-        return "patient-info";
+        List<UserInfo> filteredUsers = userList.stream()
+            .filter(u -> {
+                switch (searchType.toLowerCase()) {
+                    case "name":
+                        return u.getFirstName().equalsIgnoreCase(normalizedSearchValue)
+                            || u.getLastName().equalsIgnoreCase(normalizedSearchValue);
+                    case "email":
+                        return u.getEmail().equalsIgnoreCase(normalizedSearchValue);
+                    case "id":
+                        return u.getId().equalsIgnoreCase(normalizedSearchValue);
+                    case "phone":
+                        return u.getPhone().equalsIgnoreCase(normalizedSearchValue);
+                    case "ssn":
+                        return u.getSSN().equalsIgnoreCase(normalizedSearchValue);
+                    default:
+                        return u.getId().equalsIgnoreCase(normalizedSearchValue);
+                }
+            })
+        .collect(Collectors.toList());
+
+        model.addAttribute("userList", filteredUsers);
+        model.addAttribute("filtered", true);
+        return "search";
     }
+
 
     @PostMapping("/add-user")
     public String submitAddPatient(@RequestParam("email") String email, 
@@ -115,8 +133,8 @@ public class WebController {
             model.addAttribute("address", "");
 
             model.addAttribute("error", error);
-            model.addAttribute("updated", true);
-            return "edit";
+            model.addAttribute("updated", false);
+            return "add";
         }
         
         model.addAttribute("user", user);
@@ -132,9 +150,10 @@ public class WebController {
         model.addAttribute("role", role);
         model.addAttribute("address", address);
         model.addAttribute("error", error);
+        model.addAttribute("updated", true);
 
         // Page will go here with patient info if request was successful
-        return "add-confirmation";
+        return "home";
     }
 
     @GetMapping("/")
@@ -168,7 +187,10 @@ public class WebController {
 
         List<UserInfo> userList = uf.findAll();
         
+        model.addAttribute("searchValuePrimary", "");
+        model.addAttribute("searchValueSecondary", "");
         model.addAttribute("userList", userList);
+        model.addAttribute("filtered", false);
         return "search";
     }
 

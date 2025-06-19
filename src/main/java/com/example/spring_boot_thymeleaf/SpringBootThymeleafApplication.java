@@ -1,7 +1,5 @@
 package com.example.spring_boot_thymeleaf;
 
-import java.security.Principal;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -10,13 +8,6 @@ import org.springframework.stereotype.Controller;
 @SpringBootApplication
 @Controller
 public class SpringBootThymeleafApplication {
-
-    private final UserFetcher userFetcher;
-
-    public SpringBootThymeleafApplication(UserFetcher userFetcher) {
-        this.userFetcher = userFetcher;
-    }
-
     static {
         // load .env into system properties for both app and tests
         Dotenv dotenv = Dotenv.configure()
