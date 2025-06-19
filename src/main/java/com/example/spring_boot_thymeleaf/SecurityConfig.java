@@ -3,11 +3,17 @@ package com.example.spring_boot_thymeleaf;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+// Allows for authorizing method invocations using USER role
+// For a GET request, adding @PreAuthorize("!hasRole('MEDICAL_STAFF')")
+// Will RESTRICT the page from any USERs with MEDICAL_STAFF role
+// See WebController.java search() for one example
+@EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SecurityConfig {
 
@@ -34,6 +40,7 @@ public class SecurityConfig {
           .authorizeHttpRequests(auth -> auth
               .requestMatchers(
                   "/login",
+                  "/add",
                   "/register",
                   "/css/**", "/js/**", "/images/**"
               ).permitAll()

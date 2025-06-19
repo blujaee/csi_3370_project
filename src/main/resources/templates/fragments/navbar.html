@@ -1,0 +1,39 @@
+<!-- fragments/navbar.html -->
+<!-- Allows for quick insertion of the navbar into other pages -->
+<!-- Simply add <div th:replace="fragments/navbar :: navbar"></div> to the BOTTOM of the html body -->
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-dark p-2 px-3">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" style="color:#507fff">Co-op Health</a>
+
+        <div class="navbar-nav me-auto">
+            <a class="nav-item nav-link" draggable="false" id="homeTag"
+               style="color: rgb(175, 175, 175) !important" th:href="@{/}">Home</a>
+
+            <a class="nav-item nav-link" draggable="false" id="loginTag"
+               style="color: rgb(175, 175, 175) !important" th:href="@{/login}">Login</a>
+
+            <a class="nav-item nav-link" draggable="false" id="searchTag"
+               style="color: rgb(175, 175, 175) !important"
+               th:href="@{/search}"
+               th:if="${#authorization.expression('hasRole(''ROLE_MEDICAL_STAFF'')')}">Search Database</a>
+
+            <a class="nav-item nav-link" draggable="false" id="addTag"
+               style="color: rgb(175, 175, 175) !important" th:href="@{/add}">Register</a>
+
+            <a class="nav-item nav-link" id="editTag" draggable="false"
+               style="color: rgb(175, 175, 175) !important" th:href="@{/edit}">Edit</a>
+
+            <a class="nav-item nav-link" id="helpTag" draggable="false"
+               style="color: rgb(175, 175, 175) !important" th:href="@{/help}">Help</a>
+        </div>
+
+        <div class="d-flex ms-auto align-items-center"
+             th:if="${#authorization.expression('isAuthenticated()') and user != null}">
+            <span class="navbar-text fw-bold" style="color:#50b0ff">
+                <span th:text="'Welcome, ' + ${user.firstName}"></span>
+            </span>
+        </div>
+    </div>
+
+    <script src="/js/dynamicNavbar.js"></script>
+</nav>

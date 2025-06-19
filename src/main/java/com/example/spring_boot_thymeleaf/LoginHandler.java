@@ -44,7 +44,10 @@ public class LoginHandler {
         try {
             String hashedPassword = PASSWORD_ENCODER.encode(password);
             Class.forName("org.postgresql.Driver"); // Load PostgreSQL JDBC driver
-            try (Connection conn = DriverManager.getConnection(System.getProperty("JDBC_DATABASE_URL"), System.getProperty("JDBC_DATABASE_USERNAME"), System.getProperty("JDBC_DATABASE_PASSWORD"))) {
+            try (Connection conn = DriverManager.getConnection(
+                    System.getProperty("JDBC_DATABASE_URL"), 
+                    System.getProperty("JDBC_DATABASE_USERNAME"), 
+                    System.getProperty("JDBC_DATABASE_PASSWORD"))) {
                 String query = "INSERT INTO user_info (email, password_hash) VALUES (?, ?)";
                 try (PreparedStatement ps = conn.prepareStatement(query)) {
                     ps.setString(1, email);

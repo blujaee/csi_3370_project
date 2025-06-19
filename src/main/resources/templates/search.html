@@ -10,74 +10,68 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm navbar-light bg-dark p-2 px-3">
-      <a class="navbar-brand fw-bold" style="color: #507fff">Co-op Health</a>
+    <!-- Inject navbar from fragments/navbar.html -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-      <div class="navbar-nav">
-        <a
-          class="nav-item nav-link"
-          style="color: rgb(175, 175, 175) !important"
-          th:href="@{/}"
-        >
-          Home
-        </a>
-        <a
-          class="nav-item nav-link"
-          style="color: rgb(175, 175, 175) !important"
-          th:href="@{/search}"
-        >
-          Search Database
-        </a>
-        <a
-          class="nav-item nav-link"
-          style="color: rgb(175, 175, 175) !important"
-          th:href="@{/add}"
-        >
-          Add New Patient
-        </a>
-        <a
-          class="nav-item nav-link"
-          style="color: rgb(175, 175, 175) !important"
-          th:href="@{/help}"
-        >
-          Help
-        </a>
-
-        <a
-          class="nav-item nav-link"
-          style="color: rgb(175, 175, 175) !important; cursor: pointer;"
-          href="#"
-          th:onclick="|event.preventDefault(); document.getElementById('logoutForm').submit();|"
-        >
-          Logout
-        </a>
-        <form
-          id="logoutForm"
-          th:action="@{/logout}"
-          method="post"
-          style="display: none;"
-        >
-          <input
-            type="hidden"
-            th:name="${_csrf.parameterName}"
-            th:value="${_csrf.token}"
-          />
-        </form>
-      </div>
-    </nav>
-
-    <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
+    <div class="d-flex justify-content-center align-items-center" style="margin-top:5vw">
 		<div class="card p-4">
 			<h3 class="text-center mb-4">Database Search</h3>
 			<form th:action="@{/submit-search}"  method="post">
-				<div class="mb-3">
-					<label for="email" class="form-label">Client Email</label>
-					<input type="email" class="form-control" name="email" placeholder="Email" required>
-				</div>
+                <label for="searchType" class="form-label">Search by</label>
+                <select class="form-select" id="searchType" th:name="searchType" required>
+                    <option value="email">Email</option>
+                    <option value="id">ID</option>
+                    <option value="phone">Phone</option>
+                    <option value="name">Name</option>
+                    <option value="ssn">SSN</option>
+                </select>
+
+				<div class="mb-3 pt-2">
+					<label for="searchValue" class="form-label">Client Information</label>
+					<input type="text" class="form-control mb-2" pattern="^\S+$" 
+                        id="searchValuePrimary" th:name="searchValuePrimary" placeholder="Enter Client Info" required 
+                        title="No spaces in input.">
+                    <input type="text" class="form-control mb-2" pattern="^\S+$" 
+                        id="searchValueSecondary" th:name="searchValueSecondary" placeholder="Enter Client Secondary Info" 
+                        title="No spaces in input.">
 				<button type="submit" class="btn btn-primary w-100">Search</button>
 			</form>
 		</div>
 	</div>
-</body>
 
+    <script>
+        // When the user chooses a search option, update necessary input fields
+        const searchType = document.getElementById("searchType");
+        const secondarySearch = document.getElementById("searchValueSecondary");
+
+        secondarySearch.style.display = "none";
+        secondarySearch.required = false;
+        searchType.addEventListener("change", () => {
+            if (searchType.value === "name") {
+                secondarySearch.style.display = "block";
+                secondarySearch.required = true;
+            } else {
+                secondarySearch.style.display = "none";
+                secondarySearch.required = false;
+            }
+        });
+
+        const phoneInput = document.querySelector("input[name='phone']");
+        phoneInput.addEventListener("input", validatePhoneInput);
+        function validatePhoneInput(e) {
+            let input = e.target.value.replace(/\D/g, "");
+
+            if (input.length > 10) {
+                input = input.slice(0, 10);
+            }
+
+            let parts = [];
+            if (input.length > 0) parts.push(input.slice(0, 3));
+            if (input.length > 3) parts.push(input.slice(3, 6));
+            if (input.length > 6) parts.push(input.slice(6, 10));
+
+            e.target.value = parts.join("-");
+        }
+    </script>
+</body>
 </html>
