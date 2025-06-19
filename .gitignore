@@ -34,7 +34,3 @@ build/
 
 ## local secrets ##
 .env
-
-## dummy data files ##
-dummy_data_generator.py
-dummy_data.csv

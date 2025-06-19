@@ -10,48 +10,14 @@
     integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
     crossorigin="anonymous"
   >
-  <link rel="stylesheet" href="custom_classes.css">
+  <link rel="stylesheet" th:href="@{/custom_classes.css}">
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar-light bg-dark p-2 px-3">
-    <a class="navbar-brand fw-bold" style="color:#507fff">Co-op Health</a>
+  <!-- Inject navbar from fragments/navbar.html -->
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="navbar-nav">
-      <a
-        class="nav-item nav-link"
-        draggable="false"
-        style="color: rgb(175, 175, 175) !important"
-        th:href="@{/}"
-      >Home</a>
-      <a
-        class="nav-item nav-link active fw-bold"
-        draggable="false"
-        style="color: white !important"
-        th:href="@{/login}"
-      >Login</a>
-      <a
-        class="nav-item nav-link"
-        draggable="false"
-        style="color: rgb(175, 175, 175) !important"
-        th:href="@{/search}"
-      >Search Database</a>
-      <a
-        class="nav-item nav-link"
-        draggable="false"
-        style="color: rgb(175, 175, 175) !important"
-        th:href="@{/add}"
-      >Add New Patient</a>
-      <a
-        class="nav-item nav-link"
-        draggable="false"
-        style="color: rgb(175, 175, 175) !important"
-        th:href="@{/help}"
-      >Help</a>
-    </div>
-  </nav>
-
-  <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top:5vw">
+  <div class="d-flex justify-content-center align-items-center vh-75" style="margin-top: 5vw">
     <div class="card p-4" style="width: 320px;">
       <h3 class="text-center mb-4">Login</h3>
 
@@ -101,7 +67,7 @@
 
       <p class="text-center mt-3">
         Don’t have an account?
-        <a th:href="@{/register}">Register here</a>
+        <a th:href="@{/add}">Register here</a>
       </p>
     </div>
   </div>
