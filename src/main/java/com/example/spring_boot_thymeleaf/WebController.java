@@ -8,11 +8,11 @@ import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -132,6 +132,11 @@ public class WebController {
 
         try {
             uf.saveUser(user);
+        } catch (DuplicateKeyException e) {
+            System.out.println("Exception: One or more keys already exist in database: " + e.getMessage());
+            e.printStackTrace();
+            errorMessage = "Database rejected credentials.";
+            error = true;
         } catch (Exception e) {
             System.out.println("Exception saving user info to database: " + e.getMessage());
             e.printStackTrace();
