@@ -16,5 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
             link.classList.add("active", "fw-bold");
             link.style.color = "rgb(255, 255, 255)";
         }
+
+        if ((currentPath.toLowerCase().trim() === "/add-user") && (String(link.id) === "add")) {
+            link.classList.add("active", "fw-bold");
+            link.style.color = "rgb(255, 255, 255)";
+        }
     });
 });

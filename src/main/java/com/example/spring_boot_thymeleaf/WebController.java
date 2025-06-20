@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
@@ -51,24 +52,24 @@ public class WebController {
             return "search";
         }
 
-        String normalizedSearchValue = searchValuePrimary.toLowerCase();
+        String search = searchValuePrimary.toLowerCase();
 
         List<UserInfo> filteredUsers = userList.stream()
             .filter(u -> {
                 switch (searchType.toLowerCase()) {
                     case "name":
-                        return u.getFirstName().equalsIgnoreCase(normalizedSearchValue)
-                            || u.getLastName().equalsIgnoreCase(normalizedSearchValue);
+                        return u.getFirstName().toLowerCase().contains(search) || 
+                        u.getLastName().toLowerCase().contains(search);
                     case "email":
-                        return u.getEmail().equalsIgnoreCase(normalizedSearchValue);
+                        return u.getEmail().toLowerCase().contains(search);
                     case "id":
-                        return u.getId().equalsIgnoreCase(normalizedSearchValue);
+                        return u.getId().toLowerCase().contains(search);
                     case "phone":
-                        return u.getPhone().equalsIgnoreCase(normalizedSearchValue);
+                        return u.getPhone().toLowerCase().contains(search);
                     case "ssn":
-                        return u.getSSN().equalsIgnoreCase(normalizedSearchValue);
+                        return u.getSSN().toLowerCase().contains(search);
                     default:
-                        return u.getId().equalsIgnoreCase(normalizedSearchValue);
+                        return u.getId().toLowerCase().contains(search);
                 }
             })
         .collect(Collectors.toList());
@@ -89,54 +90,55 @@ public class WebController {
                         @RequestParam("birthdate") String birthdate, 
                         @RequestParam("address") String address, 
                         @RequestParam("password") String password,
-                        @RequestParam("password") String oldPasswordHash,
+                        @RequestParam("passwordConfirmation") String passwordConfirmation,
                         Model model) {
 
+        boolean error = false;
+        String errorMessage = "";
         String dateJoined = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         
-        String passwordHash;
-        if (oldPasswordHash.strip() != "") {
-            Hasher hasher = new Hasher();
-            passwordHash = hasher.hash(password);
+        String passwordHash = "";
+        if (!password.isBlank()) {
+            if (password.equals(passwordConfirmation)) {
+                Hasher hasher = new Hasher();
+                passwordHash = hasher.hash(password.strip());
+            } else {
+                errorMessage = "Passwords do not match.";
+                error = true;
+            }
         } else {
-            passwordHash = oldPasswordHash;
+            System.out.println("Exception saving user info to database: Password is blank.");
+            errorMessage = "Passwords are blank.";
         }
 
-        boolean error = false;
         if (!UserInfo.validatePhoneFormat(phone) || !UserInfo.validateSSNFormat(SSN)) {
             System.out.println("Exception saving user info to database: Phone or SSN string are incorrectly formatted.");
+            errorMessage = "Phone or SSN are incorrectly formatted.";
             error = true;
         } else {
             phone = phone.replaceAll("-", "");
         }
 
+        firstName = firstName.strip();
+        lastName = lastName.strip();
+        phone = phone.strip();
+        SSN = SSN.strip();
+        address = address.strip();
+        birthdate = birthdate.strip();
+        email = email.strip();
+        dateJoined = dateJoined.strip();
         UserInfo user = new UserInfo(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
         user.setId(null);
+
         try {
             uf.saveUser(user);
         } catch (Exception e) {
             System.out.println("Exception saving user info to database: " + e.getMessage());
+            e.printStackTrace();
+            errorMessage = "Database rejected credentials.";
             error = true;
         }
 
-        if (error) {
-            model.addAttribute("firstName", "");
-            model.addAttribute("lastName", "");
-            model.addAttribute("phone", "");
-            model.addAttribute("ssn", "");
-            model.addAttribute("address", "");
-            model.addAttribute("birthdate", "");
-            model.addAttribute("email", "");
-            model.addAttribute("dateJoined", "");
-            model.addAttribute("passwordHash", "");
-            model.addAttribute("role", "");
-            model.addAttribute("address", "");
-
-            model.addAttribute("error", error);
-            model.addAttribute("updated", false);
-            return "add";
-        }
-        
         model.addAttribute("user", user);
         model.addAttribute("firstName", firstName);
         model.addAttribute("lastName", lastName);
@@ -148,12 +150,12 @@ public class WebController {
         model.addAttribute("dateJoined", dateJoined);
         model.addAttribute("passwordHash", passwordHash);
         model.addAttribute("role", role);
-        model.addAttribute("address", address);
+
         model.addAttribute("error", error);
         model.addAttribute("updated", true);
+        model.addAttribute("errorMessage", errorMessage);
 
-        // Page will go here with patient info if request was successful
-        return "home";
+        return "add";
     }
 
     @GetMapping("/")
@@ -249,13 +251,28 @@ public class WebController {
                         @RequestParam("birthdate") String birthdate, 
                         @RequestParam("address") String address, 
                         @RequestParam("password") String password,
+                        @RequestParam("passwordConfirmation") String passwordConfirmation,
+                        @RequestParam("oldPasswordHash") String oldPasswordHash,
                         @RequestParam("dateJoined") String dateJoined,
                         @RequestParam("id") String id,
                         Model model) {
-        Hasher hasher = new Hasher();
-        String passwordHash = hasher.hash(password);
 
+        String errorMessage = "";
         boolean error = false;
+
+        String passwordHash = "";
+        if (!password.isBlank()) {
+            if (password.equals(passwordConfirmation)) {
+                Hasher hasher = new Hasher();
+                passwordHash = hasher.hash(password.strip());
+            } else {
+                errorMessage = "Error: Passwords do not match.";
+                error = true;
+            }
+        } else {
+            passwordHash = oldPasswordHash;
+        }
+
         if (!UserInfo.validatePhoneFormat(phone) || !UserInfo.validateSSNFormat(SSN)) {
             System.out.println("Exception saving user info to database: Phone or SSN string are incorrectly formatted.");
             error = true;
@@ -263,6 +280,14 @@ public class WebController {
             phone = phone.replaceAll("-", "");
         }
 
+        firstName = firstName.strip();
+        lastName = lastName.strip();
+        phone = phone.strip();
+        SSN = SSN.strip();
+        address = address.strip();
+        birthdate = birthdate.strip();
+        email = email.strip();
+        dateJoined = dateJoined.strip();
         UserInfo user = new UserInfo(firstName, lastName, phone, SSN, address, birthdate, email, role, dateJoined, passwordHash);
         user.setId(id);
         try {
@@ -272,24 +297,6 @@ public class WebController {
             error = true;
         }
 
-        if (error) {
-            model.addAttribute("firstName", "");
-            model.addAttribute("lastName", "");
-            model.addAttribute("phone", "");
-            model.addAttribute("ssn", "");
-            model.addAttribute("address", "");
-            model.addAttribute("birthdate", "");
-            model.addAttribute("email", "");
-            model.addAttribute("dateJoined", "");
-            model.addAttribute("passwordHash", "");
-            model.addAttribute("role", "");
-            model.addAttribute("address", "");
-
-            model.addAttribute("error", error);
-            model.addAttribute("updated", true);
-            return "edit";
-        }
-        
         model.addAttribute("user", user);
         model.addAttribute("firstName", firstName);
         model.addAttribute("lastName", lastName);
@@ -301,10 +308,10 @@ public class WebController {
         model.addAttribute("dateJoined", dateJoined);
         model.addAttribute("passwordHash", passwordHash);
         model.addAttribute("role", role);
-        model.addAttribute("address", address);
 
         model.addAttribute("error", error);
         model.addAttribute("updated", true);
+        model.addAttribute("errorMessage", errorMessage);
         return "edit";
     }
 

@@ -40,9 +40,13 @@ public class SecurityConfig {
           .authorizeHttpRequests(auth -> auth
               .requestMatchers(
                   "/login",
-                  "/add",
-                  "/register",
-                  "/css/**", "/js/**", "/images/**"
+                "/add",
+                "/add-user",
+                "/register",
+                "/custom_classes.css",
+                "/css/**",
+                "/js/**",
+                "/images/**"
               ).permitAll()
               .anyRequest().authenticated()
           )

@@ -30,6 +30,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             boolean valid = LoginHandler.authenticateUser(email, rawPassword);
             if (!valid) {
                 throw new BadCredentialsException("Invalid credentials");
+            } else {
+                System.out.println("[AUTH] >>> LoginHandler returned valid.");
             }
 
             // Set role of user to PATIENT or MEDICAL_STAFF
@@ -55,6 +57,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
         catch (ClassNotFoundException | SQLException e) {
             throw new AuthenticationServiceException("Database error", e);
+        } catch (Exception e) {
+            System.out.println("[ERROR] >>>> Unexpected exception in authenticate(): " + e.getMessage());
+            e.printStackTrace();
+            throw new AuthenticationServiceException("[ERROR] >>>> ", e);
         }
     }
 

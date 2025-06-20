@@ -15,6 +15,7 @@ public class LoginHandler {
     public static boolean authenticateUser(String email, String rawPassword)
         throws ClassNotFoundException, SQLException
     {
+        System.out.println("[DEBUG] >>>> Starting authenticateUser() for: " + email);
         Class.forName("org.postgresql.Driver");
 
         String storedHash;
@@ -27,12 +28,15 @@ public class LoginHandler {
                  "SELECT password_hash FROM user_info WHERE email = ?"
              )
         ) {
+            System.out.println("[DEBUG] >>>> Sending PreparedStatement to DB.");
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
+                    System.out.println("[DEBUG] >>>> No user found for email: " + email);
                     return false; // no such user
                 }
                 storedHash = rs.getString("password_hash");
+                System.out.println("[DEBUG] >>>> Found hash: " + storedHash);
             }
         }
 
